@@ -1,0 +1,19 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: metadata-postgres
+
+    environment:
+      POSTGRES_DB: metadata_db
+      POSTGRES_USER: metadata_user
+      POSTGRES_PASSWORD: metadata_password
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - metadata_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  metadata_postgres_data:
