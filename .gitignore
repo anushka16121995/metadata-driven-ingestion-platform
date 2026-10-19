@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+data-pipeline/.venv/
+data-pipeline/__pycache__/
+data-pipeline/output/
+data-pipeline/rejected/
