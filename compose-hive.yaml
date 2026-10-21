@@ -1,0 +1,26 @@
+services:
+
+  hive-metastore:
+    image: apache/hive:4.0.1
+    container_name: metadata-hive-metastore
+    environment:
+      SERVICE_NAME: metastore
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./data-pipeline/output:/data/output
+
+  hive-server:
+    image: apache/hive:4.0.1
+    container_name: metadata-hive-server
+    depends_on:
+      - hive-metastore
+    environment:
+      SERVICE_NAME: hiveserver2
+      SERVICE_OPTS: >-
+        -Dhive.metastore.uris=thrift://hive-metastore:9083
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+    volumes:
+      - ./data-pipeline/output:/data/output

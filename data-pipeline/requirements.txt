@@ -1,2 +1,5 @@
 requests
 pyspark
+PyHive
+thrift
+thrift_sasl
