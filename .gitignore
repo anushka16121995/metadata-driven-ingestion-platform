@@ -36,3 +36,19 @@ data-pipeline/.venv/
 data-pipeline/__pycache__/
 data-pipeline/output/
 data-pipeline/rejected/
+
+# Airflow generated files
+airflow/logs/
+airflow/dags/__pycache__/
+
+# Python compiled files anywhere
+__pycache__/
+*.pyc
+
+# Local environment / secrets
+.env
+*.env
+
+# Google Cloud credentials - never commit
+application_default_credentials.json
+*service-account*.json

@@ -1,0 +1,12 @@
+services:
+
+  pipeline:
+    image: metadata-pipeline
+
+    environment:
+      METADATA_SERVICE_URL: http://host.docker.internal:8080
+
+    volumes:
+      - ./data-pipeline/input:/app/input
+      - ./data-pipeline/output:/app/output
+      - ./data-pipeline/rejected:/app/rejected

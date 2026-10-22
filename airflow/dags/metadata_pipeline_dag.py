@@ -1,29 +1,8 @@
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 
-
-def run_ingestion_pipeline():
-    print("Starting PySpark ingestion pipeline")
-
-    print(
-        "Pipeline stages: "
-        "SCANNER -> LOADER -> VALIDATOR -> ENRICHER -> WRITER"
-    )
-
-    print("PySpark ingestion pipeline completed")
-
-
-def register_hive_catalog():
-    print("Starting Hive crawler")
-
-    print(
-        "Registering processed Parquet dataset "
-        "as Hive external table"
-    )
-
-    print("Hive crawler completed")
 
 default_args = {
     "owner": "data-engineering",
@@ -31,24 +10,33 @@ default_args = {
     "retry_delay": timedelta(minutes=1)
 }
 
+
 with DAG(
     dag_id="metadata_ingestion_pipeline",
-    description="Orchestrates PySpark ingestion and Hive catalog registration",
+    description="Orchestrates Dockerized PySpark ingestion and Hive catalog registration",
     default_args=default_args,
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,
-    tags=["data-engineering", "pyspark", "hive"]
+    tags=["data-engineering", "pyspark", "hive", "docker"]
 ) as dag:
 
-    ingestion = PythonOperator(
+    ingestion = BashOperator(
         task_id="run_ingestion_pipeline",
-        python_callable=run_ingestion_pipeline
+        bash_command="""
+        docker run --rm \
+        -e METADATA_SERVICE_URL=http://host.docker.internal:8080 \
+        metadata-pipeline
+        """
     )
 
-    crawler = PythonOperator(
+    crawler = BashOperator(
         task_id="register_hive_catalog",
-        python_callable=register_hive_catalog
+        bash_command="""
+        docker run --rm \
+        metadata-pipeline \
+        python test_crawler.py
+        """
     )
 
     ingestion >> crawler

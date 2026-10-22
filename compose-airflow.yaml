@@ -1,7 +1,9 @@
 services:
 
   airflow:
-    image: apache/airflow:2.10.5
+    build:
+      context: ./airflow
+
     container_name: metadata-airflow
 
     environment:
@@ -15,6 +17,8 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data-pipeline:/workspace/data-pipeline
 
     command: >
       bash -c "

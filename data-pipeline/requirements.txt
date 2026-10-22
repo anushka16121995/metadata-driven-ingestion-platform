@@ -3,3 +3,4 @@ pyspark
 PyHive
 thrift
 thrift_sasl
+google-cloud-bigquery
